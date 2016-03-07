@@ -1,14 +1,17 @@
 defmodule Prelude.Mixfile do
   use Mix.Project
 
+  @version "0.1.0"
   def project do
     [app: :prelude,
-      version: "0.0.2",
+      version: @version,
       name: "Elixir Prelude",
-      source_url: "https://github.com/houshuang/elixir-prelude",
+      source_url: "https://github.com/ruby2elixir/elixir-prelude",
       elixir: "~> 1.0",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
+      package: package,
+      docs: [extras: ["README.md"]],
       deps: deps]
   end
 
@@ -32,6 +35,18 @@ defmodule Prelude.Mixfile do
     [
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.8", only: :dev}
+    ]
+  end
+
+  defp package do
+    [
+     maintainers: ["Stian Håklev", "Roman Heinrich"],
+     licenses: ["MIT License"],
+     description: "Small set of useful utility functions",
+     links: %{
+       github: "https://github.com/ruby2elixir/elixir_prelude",
+       docs: "http://hexdocs.pm/elixir_prelude/#{@version}/"
+     }
     ]
   end
 end
