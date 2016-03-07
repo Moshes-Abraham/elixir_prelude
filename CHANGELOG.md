@@ -1,3 +1,11 @@
+0.2.1
+  - Prelude.Map
+    - simplify del_in implementation, now extra `item` params not needed
+
+  - Readme with concrete instructions
+  - doctests for all modules
+
+
 0.2.0:
   - better unit tests
   - Prelude.Map

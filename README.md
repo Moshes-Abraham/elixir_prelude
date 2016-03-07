@@ -34,7 +34,7 @@ iex> Prelude.Map.deep_put(%Data{}, [:data, :b, :c, :d], 2)
 iex> Prelude.Map.deep_get(%Data{data: %{b: %{c: %{d: 2}}}}, [:data, :b, :c, :d])
 2
 
-iex> Prelude.Map.del_in(%Data{data: %{b: %{c: %{d: 2}}}}, [:data, :b, :c], :d)
+iex> Prelude.Map.del_in(%Data{data: %{b: %{c: %{d: 2}}}}, [:data, :b, :c, :d])
 %Data{data: %{b: %{c: %{}}}}
 ```
 
