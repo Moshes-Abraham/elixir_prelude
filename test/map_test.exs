@@ -7,9 +7,28 @@ defmodule Prelude.Test.Map do
   end
 
   describe "deep_put" do
-    it "works with nested structs" do
+    it "works with nested maps" do
+      r = Prelude.Map.deep_put(%{assigns: %{works: "nope"}}, [:assigns, :works], "yes!")
+      assert r.assigns[:works] == "yes!"
+    end
+
+    it "maps: overrides deep values" do
       r = Prelude.Map.deep_put(%Bla{}, [:assigns, :works], "yes!")
       assert r.assigns[:works] == "yes!"
+    end
+  end
+
+  describe "deep_put_list" do
+    it "works with nested maps" do
+      map = %{assigns: %{works: "nope"}}
+      r = Prelude.Map.deep_put_list(map, [:assigns, :works], "yes!")
+      assert r.assigns[:works] == ["yes!", "nope"]
+    end
+
+    it "maps: overrides deep values" do
+      struct = %Bla{}
+      r = Prelude.Map.deep_put_list(struct, [:assigns, :works], ["yes!"])
+      assert r.assigns[:works] == ["yes!"]
     end
   end
 

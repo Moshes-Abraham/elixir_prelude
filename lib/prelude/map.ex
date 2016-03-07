@@ -51,19 +51,51 @@ defmodule Prelude.Map do
 
 
   def deep_put(map, path, val) do
+    deep_put(:map, map, path, val)
+  end
+
+
+  def deep_put_list(map=%{__struct__: type}, path, val) do
+    map
+      |> Map.from_struct
+      |> deep_put_list(path, val)
+      |> Map.put(:__struct__, type)
+  end
+
+  def deep_put_list(map, path, val) do
+    deep_put(:list, map, path, val)
+  end
+
+
+  defp deep_put(type, map, path, val) do
     state = {map, []}
-    Enum.reduce(path, state, fn x, {acc, cursor} ->
-      cursor = [ x | cursor ]
-      final = length(cursor) == length(path)
-      newval = case get_in(acc, Enum.reverse(cursor)) do
-        h when is_list(h) -> [ val | h ]
-        nil -> if final, do: val, else: %{}
-        h = %{} -> if final, do: [val, h], else: h
-        h -> if final, do: [ val, h ], else: [h]
-      end
-      { put_in(acc, Enum.reverse(cursor), newval), cursor }
+    res = Enum.reduce(path, state, fn x, {acc, cursor} ->
+      cursor   = [ x | cursor ]
+      final    = length(cursor) == length(path)
+      curr_val = get_in(acc, Enum.reverse(cursor))
+      newval   = new_value(type, curr_val, val, final)
+      acc      = put_in(acc, Enum.reverse(cursor), newval)
+      { acc, cursor }
     end)
-    |> fn x -> elem(x, 0) end.()
+    res |> elem(0)
+  end
+
+  defp new_value(:list, curr_val, val, final) do
+    case curr_val do
+      h when is_list(h) -> [ val | h ]
+      nil               -> if final, do: val,        else: %{}
+      h = %{}           -> if final, do: [val, h],   else: h
+      h                 -> if final, do: [val, h],   else: [h]
+    end
+  end
+
+  defp new_value(:map, curr_val, val, final) do
+    case curr_val do
+      h when is_list(h) -> [ val | h ]
+      nil               -> if final, do: val,        else: %{}
+      h = %{}           -> if final, do: [val, h],   else: h
+      h                 -> if final, do: val,        else: [h]
+    end
   end
 
   @doc """
