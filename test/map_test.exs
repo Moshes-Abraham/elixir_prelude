@@ -81,8 +81,9 @@ defmodule Prelude.Test.Map do
     it "works with nested structs" do
       a = struct(Bla, %{a: %{b: ["yes", "maybe"]}})
       refute a.a.b == nil
-      r = Prelude.Map.del_in(a, [:a], :b)
+      r = Prelude.Map.del_in(a, [:a, :b])
       assert r.a[:b] == nil
+      assert r.a == %{}
     end
   end
 end

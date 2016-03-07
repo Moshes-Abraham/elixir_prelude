@@ -112,17 +112,19 @@ defmodule Prelude.Map do
   For example:
 
       iex> a = %{a: %{b: %{c: %{d: 1, e: 1}}}}
-      ...> Prelude.Map.del_in(a, [:a, :b, :c], :d)
+      ...> Prelude.Map.del_in(a, [:a, :b, :c, :d])
       %{a: %{b: %{c: %{e: 1}}}}
   """
-  def del_in(map=%{__struct__: type}, path, item) do
+  def del_in(map=%{__struct__: type}, path) do
     map
       |> Map.from_struct
-      |> del_in(path, item)
+      |> del_in(path)
       |> Map.put(:__struct__, type)
   end
 
-  def del_in(map, path, item) do
+  def del_in(map, path) do
+    [item | path] = path |> Enum.reverse
+    path          = path |> Enum.reverse
     obj = get_in(map, path)
     put_in(map, path, Map.delete(obj, item))
   end
