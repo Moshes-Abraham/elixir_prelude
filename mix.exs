@@ -1,7 +1,7 @@
 defmodule Prelude.Mixfile do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.1.5"
   def project do
     [app: :elixir_prelude,
       version: @version,
@@ -33,6 +33,7 @@ defmodule Prelude.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
+      {:ex_spec, "~> 1.0", only: :test},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.8", only: :dev}
     ]

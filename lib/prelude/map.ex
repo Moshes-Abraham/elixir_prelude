@@ -1,7 +1,7 @@
 defmodule Prelude.Map do
   @moduledoc "Functions operating on `maps`."
 
-  @doc ~s"""
+  @doc """
   Group a map by an array of keys
 
   Provide a list of maps, and a list of keys to group by. All maps must
@@ -28,8 +28,9 @@ defmodule Prelude.Map do
     deep_put(map, path, [item])
   end
 
-  @doc ~s"""
-  Put an arbitrarily deep key into an existing map
+  @doc """
+  Put an arbitrarily deep key into an existing map.
+  Works also with Stucts (more like a workaround)
 
   If a value already exists at that level, it is turned into a list
 
@@ -41,6 +42,14 @@ defmodule Prelude.Map do
       iex> Prelude.Map.deep_put(%{a: %{b: %{c: "1"}}}, [:a, :b, :c, :d], "2")
       %{a: %{b: %{c: [{:d, "2"}, "1"]}}}
   """
+  def deep_put(map=%{__struct__: type}, path, val) do
+    map
+      |> Map.from_struct
+      |> deep_put(path, val)
+      |> Map.put(:__struct__, type)
+  end
+
+
   def deep_put(map, path, val) do
     state = {map, []}
     Enum.reduce(path, state, fn x, {acc, cursor} ->
@@ -57,8 +66,21 @@ defmodule Prelude.Map do
     |> fn x -> elem(x, 0) end.()
   end
 
-  @doc ~s"""
+  @doc """
+  To keep the API consistent also a way to get deep nested values.
+  Works with structs.
+
+  """
+  def deep_get(map=%{__struct__: _type}, path) do
+    map
+      |> Map.from_struct
+      |> get_in(path)
+  end
+  def deep_get(map, path),  do: get_in(map, path)
+
+  @doc """
   Remove a map key arbitrarily deep in a structure, similar to put_in
+  Works also with Stucts (more like a workaround)
 
   For example:
 
@@ -66,9 +88,16 @@ defmodule Prelude.Map do
       ...> Prelude.Map.del_in(a, [:a, :b, :c], :d)
       %{a: %{b: %{c: %{e: 1}}}}
   """
-  def del_in(object, path, item) do
-    obj = get_in(object, path)
-    put_in(object, path, Map.delete(obj, item))
+  def del_in(map=%{__struct__: type}, path, item) do
+    map
+      |> Map.from_struct
+      |> del_in(path, item)
+      |> Map.put(:__struct__, type)
+  end
+
+  def del_in(map, path, item) do
+    obj = get_in(map, path)
+    put_in(map, path, Map.delete(obj, item))
   end
 
   @doc "Turns all string map keys into atoms, leaving existing atoms alone (only top level)"
