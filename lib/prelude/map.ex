@@ -30,7 +30,7 @@ defmodule Prelude.Map do
 
   @doc """
   Put an arbitrarily deep key into an existing map.
-  Works also with Stucts (more like a workaround)
+  Works also with Stucts.
 
   If a value already exists at that level, it is turned into a list
 
@@ -68,7 +68,7 @@ defmodule Prelude.Map do
 
   @doc """
   To keep the API consistent also a way to get deep nested values.
-  Works with structs.
+  Works also with Stucts.
 
   """
   def deep_get(map=%{__struct__: _type}, path) do
@@ -80,7 +80,7 @@ defmodule Prelude.Map do
 
   @doc """
   Remove a map key arbitrarily deep in a structure, similar to put_in
-  Works also with Stucts (more like a workaround)
+  Works also with Stucts.
 
   For example:
 
