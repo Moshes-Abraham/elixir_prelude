@@ -43,7 +43,7 @@ defmodule Prelude.Map do
 
       # when provided a deep path, all intermediate items are converted to maps
       # this can lead to loss of data, eg:
-      # a.b.c = 1 is replace by a map to make path a.b.c.d = 2 possible
+      # a.b.c = 1 is replaced by a map to make path a.b.c.d = 2 possible
       iex> Prelude.Map.deep_put(%{a: %{b: %{c: "1"}}}, [:a, :b, :c, :d], "2")
       %{a: %{b: %{c: %{d: "2"}}}}
 
@@ -87,9 +87,9 @@ defmodule Prelude.Map do
   defp new_value(:list, curr_val, val, final) do
     case curr_val do
       h when is_list(h) -> [ val | h ]
-      nil               -> if final, do: [val],      else: %{}
-      h = %{}           -> if final, do: [val, h],   else: h
-      h                 -> if final, do: [val, h],   else: %{} # overrided non-map values!
+      nil               -> if final, do: [val],    else: %{}
+      h = %{}           -> if final, do: [val, h], else: h
+      h                 -> if final, do: [val, h], else: %{} # overrided non-map values!
     end
   end
 
