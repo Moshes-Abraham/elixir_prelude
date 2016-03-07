@@ -32,17 +32,31 @@ defmodule Prelude.Map do
   Put an arbitrarily deep key into an existing map.
   Works also with Stucts.
 
+  If you want to create lists as values, provide :list as last parameter.
+
   If a value already exists at that level, it is turned into a list
 
   For example:
-
+      # it works as expected with empty maps
       iex> Prelude.Map.deep_put(%{}, [:a, :b, :c], "0")
       %{a: %{b: %{c: "0"}}}
 
+      # when provided a deep path, all intermediate items are converted to maps
+      # this can lead to loss of data, eg:
+      # a.b.c = 1 is replace by a map to make path a.b.c.d = 2 possible
       iex> Prelude.Map.deep_put(%{a: %{b: %{c: "1"}}}, [:a, :b, :c, :d], "2")
-      %{a: %{b: %{c: [{:d, "2"}, "1"]}}}
+      %{a: %{b: %{c: %{d: "2"}}}}
+
+      # to collect values in a list, provide :list as last parameter.
+      iex> Prelude.Map.deep_put(%{a: %{b: %{c: "1"}}}, [:a, :b, :c, :d], "2", :list)
+      %{a: %{b: %{c: %{d: ["2"]}}}}
+
+      # to collect values in a list, provide :list as last parameter.
+      iex> Prelude.Map.deep_put(%{a: %{b: %{c: ["1"]}}}, [:a, :b, :c], "2", :list)
+      %{a: %{b: %{c: ["2", "1"]}}}
   """
-  def deep_put(map=%{__struct__: struct}, path, val, variation \\ :map ) do
+  def deep_put(map, path, val, variation \\ :map)
+  def deep_put(map=%{__struct__: struct}, path, val, variation) do
     map
       |> Map.from_struct
       |> deep_put(path, val, variation)
@@ -63,21 +77,19 @@ defmodule Prelude.Map do
     res |> elem(0)
   end
 
+  defp new_value(:map, curr_val, val, final) do
+    case curr_val do
+      h = %{} -> if final, do: val, else: h
+      _       -> if final, do: val, else: %{} # override non-map value!
+    end
+  end
+
   defp new_value(:list, curr_val, val, final) do
     case curr_val do
       h when is_list(h) -> [ val | h ]
       nil               -> if final, do: [val],      else: %{}
       h = %{}           -> if final, do: [val, h],   else: h
-      h                 -> if final, do: [val, h],   else: [h]
-    end
-  end
-
-  defp new_value(:map, curr_val, val, final) do
-    case curr_val do
-      h when is_list(h) -> [ val | h ]
-      nil               -> if final, do: val,        else: %{}
-      h = %{}           -> if final, do: [val, h],   else: h
-      h                 -> if final, do: val,        else: [h]
+      h                 -> if final, do: [val, h],   else: %{} # overrided non-map values!
     end
   end
 
