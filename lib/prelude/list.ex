@@ -6,11 +6,11 @@ defmodule Prelude.List do
 
   Example:
 
-    iex> Prelude.List.indexify(["a", "b"])
-    %{0 => "a", 1 => "b"}
+      iex> Prelude.List.indexify(["a", "b"])
+      %{0 => "a", 1 => "b"}
 
-    iex> Prelude.List.indexify([6,7,8])
-    %{0 => 6, 1 => 7, 2 => 8}
+      iex> Prelude.List.indexify([6,7,8])
+      %{0 => 6, 1 => 7, 2 => 8}
   """
   def indexify(list) when is_list(list) do
     list
