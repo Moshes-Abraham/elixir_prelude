@@ -3,10 +3,10 @@ defmodule Prelude.Mixfile do
 
   @version "0.1.0"
   def project do
-    [app: :prelude,
+    [app: :elixir_prelude,
       version: @version,
       name: "Elixir Prelude",
-      source_url: "https://github.com/ruby2elixir/elixir-prelude",
+      source_url: "https://github.com/ruby2elixir/elixir_prelude",
       elixir: "~> 1.0",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
