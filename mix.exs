@@ -1,7 +1,7 @@
 defmodule Prelude.Mixfile do
   use Mix.Project
 
-  @version "0.2.0"
+  @version "0.2.1"
   def project do
     [app: :elixir_prelude,
       version: @version,
