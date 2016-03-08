@@ -28,14 +28,14 @@ defmodule Data do
   defstruct data: %{}
 end
 
-iex> Prelude.Map.deep_put(%Data{}, [:data, :b, :c, :d], 2)
-%Data{data: %{b: %{c: %{d: 2}}}}
+Prelude.Map.deep_put(%Data{}, [:data, :b, :c, :d], 2)
+#=> %Data{data: %{b: %{c: %{d: 2}}}}
 
-iex> Prelude.Map.deep_get(%Data{data: %{b: %{c: %{d: 2}}}}, [:data, :b, :c, :d])
-2
+Prelude.Map.deep_get(%Data{data: %{b: %{c: %{d: 2}}}}, [:data, :b, :c, :d])
+#=> 2
 
-iex> Prelude.Map.del_in(%Data{data: %{b: %{c: %{d: 2}}}}, [:data, :b, :c, :d])
-%Data{data: %{b: %{c: %{}}}}
+Prelude.Map.del_in(%Data{data: %{b: %{c: %{d: 2}}}}, [:data, :b, :c, :d])
+#=> %Data{data: %{b: %{c: %{}}}}
 ```
 
 Other modules:
