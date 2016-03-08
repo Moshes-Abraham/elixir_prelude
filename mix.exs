@@ -11,7 +11,7 @@ defmodule Prelude.Mixfile do
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       package: package,
-      docs: [extras: ["README.md"]],
+      docs: [extras: ["README.md", "CHANGELOG.md"]],
       deps: deps]
   end
 
