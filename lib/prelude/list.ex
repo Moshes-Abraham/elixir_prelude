@@ -15,7 +15,7 @@ defmodule Prelude.List do
   def indexify(list) when is_list(list) do
     list
     |> Enum.with_index
-    |> Enum.map(fn {k, v} -> {v, k} end)
+    |> Enum.map(fn({k, v})-> {v, k} end)
     |> Enum.into(%{})
   end
 
