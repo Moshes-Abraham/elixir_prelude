@@ -18,13 +18,13 @@ defmodule Prelude.Map do
           2 => [%{cat: 2, group: 1, name: "stian"}] } }
   """
   def group_by(maps, groups) when is_list(maps) and is_list(groups) do
-    Enum.reduce(maps, %{}, fn x, acc ->
+    Enum.reduce(maps, %{}, fn(x, acc)->
       extract_and_put(acc, x, groups)
     end)
   end
 
   defp extract_and_put(map, item, groups) do
-    path = Enum.map(groups, fn group -> Map.get(item, group) end)
+    path = Enum.map(groups, fn(group)-> Map.get(item, group) end)
     deep_put(map, path, [item])
   end
 
@@ -58,15 +58,15 @@ defmodule Prelude.Map do
   def deep_put(map, path, val, variation \\ :map)
   def deep_put(map=%{__struct__: struct}, path, val, variation) do
     map
-      |> Map.from_struct
-      |> deep_put(path, val, variation)
-      |> Map.put(:__struct__, struct)
+    |> Map.from_struct
+    |> deep_put(path, val, variation)
+    |> Map.put(:__struct__, struct)
   end
 
 
   def deep_put(map, path, val, variation) do
     state = {map, []}
-    res = Enum.reduce(path, state, fn x, {acc, cursor} ->
+    res = Enum.reduce(path, state, fn(x, {acc, cursor})->
       cursor   = [ x | cursor ]
       final    = length(cursor) == length(path)
       curr_val = get_in(acc, Enum.reverse(cursor))
@@ -100,8 +100,8 @@ defmodule Prelude.Map do
   """
   def deep_get(map=%{__struct__: _type}, path) do
     map
-      |> Map.from_struct
-      |> get_in(path)
+    |> Map.from_struct
+    |> get_in(path)
   end
   def deep_get(map, path),  do: get_in(map, path)
 
@@ -117,9 +117,9 @@ defmodule Prelude.Map do
   """
   def del_in(map=%{__struct__: type}, path) do
     map
-      |> Map.from_struct
-      |> del_in(path)
-      |> Map.put(:__struct__, type)
+    |> Map.from_struct
+    |> del_in(path)
+    |> Map.put(:__struct__, type)
   end
 
   def del_in(map, path) do
@@ -131,29 +131,31 @@ defmodule Prelude.Map do
 
   @doc "Turns all string map keys into atoms, leaving existing atoms alone (only top level)"
   def atomify(map) do
-    Enum.map(map, fn {k,v} -> {Prelude.String.to_atom(k), v} end)
+    map
+    |> Enum.map(fn({k,v})-> {Prelude.String.to_atom(k), v} end)
     |> Enum.into(%{})
   end
 
   @doc "Turns all atom map keys into strings, leaving existing strings alone (only top level)"
   def stringify(map) do
-    Enum.map(map, fn {k,v} -> {Prelude.Atom.to_string(k), v} end)
+    map
+    |> Enum.map(fn({k,v})-> {Prelude.Atom.to_string(k), v} end)
     |> Enum.into(%{})
   end
 
   @doc "Converts strings to atoms, but leaves existing atoms alone"
-  def to_atom(x) when is_atom(x), do: x
+  def to_atom(x) when is_atom(x),   do: x
   def to_atom(x) when is_binary(x), do: String.to_atom(x)
 
   @doc "Appends to an array value in a map, creating one if the key does not exist"
   def append_list(map, key, val) do
-    Map.update(map, key, [val], fn x -> List.insert_at(x, 0, val) end)
+    Map.update(map, key, [val], fn(x)-> List.insert_at(x, 0, val) end)
   end
 
   @doc "Switch the keys with the values in a map"
   def switch(map) when is_map(map) do
     map
-    |> Enum.map(fn {k, v} -> {v, k} end)
+    |> Enum.map(fn({k, v})-> {v, k} end)
     |> Enum.into(%{})
   end
 end
